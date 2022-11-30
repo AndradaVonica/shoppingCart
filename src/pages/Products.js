@@ -135,7 +135,7 @@ const Products = () => {
                     )}
                 />
             </Stack>
-            <input placeholder='search by text' onChange={handleFilterText} />
+            {/* <input placeholder='search by text' onChange={handleFilterText} /> */}
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="space-evenly" paddingLeft="110px" paddingBottom="90px">
                 {filteredProducts.map((el) =>
                     <Grid item style={productStyle.div} key={el.productId}  >
