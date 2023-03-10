@@ -2,9 +2,7 @@ import Header from './components/Header'
 import Products from './pages/Products'
 import Home from './pages/Home'
 import Cart from './pages/Cart';
-import CartContext from './context/CartContext'
-import { useState } from 'react'
-import { Routes, Route, useNavigate, BrowserRouter } from 'react-router-dom';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
 
 
 function App() {

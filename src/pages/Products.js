@@ -6,7 +6,8 @@ import { Box, Pagination } from '@mui/material'
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Autocomplete from '@mui/material/Autocomplete';
-import { json } from 'react-router';
+import { useCart } from "../context/CartContext"
+
 
 
 
@@ -70,12 +71,40 @@ const productStyle = {
     }
 }
 
+export function ProductListing() {
+    const { setItemsInCart } = useCart();
+    const [cartProduct, setCartProduct] = useState('')
+    // console.log(useCart())
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await fetch('products.json')
+            const jsonData = await data.json()
+            setCartProduct(jsonData)
+            // console.log(setCartProduct)
+        }
+        fetchData()
+    }, [])
+    return setCartProduct.map((el) => (
+        < div >
+            <h2> {el.description}</h2>
+            <p>{el.price}</p>
+            <p>{el.details}</p>
+            <button onClick={() => setItemsInCart((ite) => [...ite, el])}>
+                Add to cart
+        </button>
+        </div >
+    ));
+}
+
+
 const Products = () => {
 
     const [allProducts, setAllProducts] = useState([]);
     const [searchProducts, setSearchProducts] = useState([])
     const [size, setSize] = useState(6);
     const [filteredProducts, setFilteredProducts] = useState([])
+    const { setItemsInCart, itemsInCart } = useCart();
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -110,7 +139,19 @@ const Products = () => {
         setFilteredProducts(newProducts)
         console.log(newProducts)
     }
-
+    const addProduct = (product) => {
+        const newItems = [...itemsInCart]
+        const productIndex = newItems.findIndex(elem => {
+            return elem.productId === product.productId
+        })
+        if (productIndex === -1) {
+            setItemsInCart([...newItems, { ...product, quantity: 1 }])
+        } else {
+            newItems[productIndex].quantity += 1
+            setItemsInCart([...newItems])
+        }
+        console.log(productIndex)
+    }
     return (
 
         <div style={{ display: 'flex', justifyContent: 'space-around', flexDirection: 'column' }}>
@@ -144,7 +185,7 @@ const Products = () => {
                         <p style={productStyle.p} > Price: {el.price} $ </p>
                         <p style={productStyle.p} >  {el.details}  </p>
 
-                        <Button onClick={() => { }} style={productStyle.add} variant="outlined">
+                        <Button onClick={() => addProduct(el)} style={productStyle.add} variant="outlined">
                             Add
                         </Button>
                     </Grid>
